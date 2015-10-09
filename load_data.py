@@ -1,4 +1,3 @@
-# Author: Justice Amoh
 # Description: Python script to load and visualize What's Cooking Data
 # Other sources: used lemmitization code from @DipayanSinhaRoy
 # https://www.kaggle.com/dipayan/whats-cooking/whatscooking-python
