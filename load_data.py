@@ -5,6 +5,7 @@
 # import numpy as np
 import pandas as pd
 import re
+import colormaps as cmaps  # cmaps.parula (matlab), cmaps.viridis, inferno, magma, plasma 
 # import matplotlib.pyplot as plt 
 # import matplotlib.patheffects as PathEffects
 
