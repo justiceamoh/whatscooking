@@ -1,8 +1,9 @@
 # Description: Python script to load and visualize What's Cooking Data
 # Other sources: used lemmitization code from @DipayanSinhaRoy
 # https://www.kaggle.com/dipayan/whats-cooking/whatscooking-python
-# %pylab
+#%pylab
 # import numpy as np
+from time import time
 import pandas as pd
 import re
 import colormaps as cmaps  # cmaps.parula (matlab), cmaps.viridis, inferno, magma, plasma 
@@ -14,6 +15,8 @@ from sklearn.manifold import TSNE
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
+
+from tsne import bh_sne
 
 # Read JSON data using pandas
 # columns are: id, cuisine, ingredients
@@ -36,10 +39,13 @@ x_train     = vectorizer.fit_transform(data.ingredients_string).todense()
 ingred_dict = vectorizer.vocabulary_
 
 # limit training data: british, chinese & indian
-idx = np.logical_or(y_train==1, y_train==3)
-idx = np.logical_or(idx, y_train==7)
-x_train = x_train[idx]
-y_train = y_train[idx]
+#idx = np.logical_or(y_train==1, y_train==3)
+#idx = np.logical_or(idx, y_train==2)
+#idx = np.logical_or(idx, y_train==4)
+#idx = np.logical_or(idx, y_train==5)
+#idx = np.logical_or(idx, y_train==7)
+#x_train = x_train[idx]
+#y_train = y_train[idx]
 
 
 # Visualize Using PCA 
@@ -48,7 +54,7 @@ x_pca = PCA(n_components=2).fit_transform(x_train)
 t1 = time()
 print("PCA: %.2g sec" % (t1 - t0))
 figure()
-scatter(x_pca[:,0], x_pca[:,1], c=y_train)
+scatter(x_pca[:,0], x_pca[:,1], c=y_train, cmap=cmaps.parula)
 title('PCA Visualization of Cuisines')
 xlabel('Component 1')
 ylabel('Component 2')
@@ -56,13 +62,14 @@ ylabel('Component 2')
 # Visualize Using t-SNE
 print("Computing t-SNE embedding")
 t0 = time()
-tsne = TSNE(n_components=2, init='pca', random_state=0)
-x_tsne = tsne.fit_transform(x_train)
+#tsne = TSNE(n_components=2, init='pca', random_state=0)
+#x_tsne = tsne.fit_transform(x_train)
+x_tsne = bh_sne(x_train)
 t1 = time()
 print("t-SNE: %.2g sec" % (t1 - t0))
 figure()
-scatter(x_tsne[:,0], x_tsne[:,1], c=y_train)
-title('PCA Visualization of Cuisines')
+scatter(x_tsne[:,0], x_tsne[:,1], c=y_train, cmap=cmaps.parula)
+title('t-SNE Visualization of Cuisines')
 xlabel('Component 1')
 ylabel('Component 2')
 
