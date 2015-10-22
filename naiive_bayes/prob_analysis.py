@@ -10,8 +10,7 @@ import sys
 from nltk.stem import WordNetLemmatizer
 from sklearn.preprocessing import LabelEncoder
 import math
-
-
+from mpmath import *
 
 #Function: Clean_up
 #
@@ -71,21 +70,14 @@ def calculate_probability_ingredients_given_cuisine(input_ingredients, vocabular
 
 	print("\n\n")
 
-	probability = 10000
+	probability = mpf(1)
 
 	for ingredient in input_ingredients:
 
-		entries_with_ingredient = cuisine.get_instances_of_ingredient(ingredient) + 1
+		entries_with_ingredient = mpf(cuisine.get_instances_of_ingredient(ingredient) + 1)
 		entries_for_cuisine = cuisine_entries + len(vocabulary)
-		prob_ingredient = (entries_with_ingredient/entries_for_cuisine)
-
-		print("			Ingredient:" + ingredient)
-
-		print("				Entries in cuisine with this ingredient:	" + str(entries_with_ingredient))
-		print("				Entries in cuisine:	" + str(entries_for_cuisine))
-
-		print("				Probability:	" + str(entries_with_ingredient/entries_for_cuisine))
-		probability = probability * prob_ingredient
+		prob_ingredient = mpf((entries_with_ingredient/entries_for_cuisine)) 
+		probability = mpf(probability * prob_ingredient)
 
 	return probability
 
@@ -94,22 +86,33 @@ def get_args():
 	return args[1:]
 
 if __name__ == "__main__":
-	input_ingredients = get_args()
+
 
 	vocabulary, num_entries, cuisine_counts, cuisines = get_training_data()
 
+	try:	
+		while(True):
+	
+			input_ingredients = raw_input('Enter Ingredients>')
+			input_ingredients = input_ingredients.split(" ")
 
-	for cuisine_type in cuisine_counts.keys():
+			max_prob = -1
+			best_match = None
 
-		print("Cuising Type:" + cuisine_type)
+			for cuisine_type in cuisine_counts.keys():
 
-		print("		Entries of this Cuisine:	" + str(cuisine_counts[cuisine_type]))
-		print("		Total Cuisine Entries:	" + str(num_entries))
+				prob_of_cuisine = mpf(cuisine_counts[cuisine_type])/mpf(num_entries)
+				prob_of_ingredients_given_cuisine = mpf(calculate_probability_ingredients_given_cuisine(input_ingredients, vocabulary, cuisines[cuisine_type], cuisine_counts[cuisine_type]))
+				prob_of_cuisine_given_ingredients = mpf(prob_of_ingredients_given_cuisine * prob_of_cuisine)
+				
+				if(max_prob<prob_of_cuisine_given_ingredients):
+					max_prob = prob_of_cuisine_given_ingredients
+					best_match = cuisine_type
 
-		print("		Probability:	" + str(cuisine_counts[cuisine_type]/num_entries))
-		
-		log_prob_of_cuisine = cuisine_counts[cuisine_type]/num_entries
-		log_prob_of_ingredients_given_cuisine = calculate_probability_ingredients_given_cuisine(input_ingredients, vocabulary, cuisines[cuisine_type], cuisine_counts[cuisine_type])
-		prob_of_cuisine_given_ingredients = log_prob_of_ingredients_given_cuisine + log_prob_of_cuisine
+			print(str(best_match)+ "      Probability   "+ str(max_prob)+"\n")
+
+	except KeyboardInterrupt:
+		print("Program Terminated\n")
+		sys.exit(0)   
 		
 	
