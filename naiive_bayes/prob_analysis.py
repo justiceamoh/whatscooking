@@ -73,7 +73,7 @@ def calculate_probability_ingredients_given_cuisine(input_ingredients, vocabular
 	probability = mpf(1)
 
 	for ingredient in input_ingredients:
-
+		ingredient = WordNetLemmatizer().lemmatize(ingredient)
 		entries_with_ingredient = mpf(cuisine.get_instances_of_ingredient(ingredient) + 1)
 		entries_for_cuisine = cuisine_entries + len(vocabulary)
 		prob_ingredient = mpf((entries_with_ingredient/entries_for_cuisine)) 
