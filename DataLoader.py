@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 
 from nltk.stem import WordNetLemmatizer
 from sklearn.manifold import TSNE
+from sklearn.cross_validation import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 from sklearn.decomposition import PCA
@@ -34,8 +35,8 @@ class DataLoader:
         labels = LabelEncoder()
         labels.fit(data.cuisine)
         self.classes = labels.classes_
-        self.label_encode = labels.fit()
-        self.label_decode = labels.transform()        
+        self.class_encode = labels.transform
+        self.class_decode = labels.inverse_transform        
 
         # Get numerical labels for ytrain 
         y_train = labels.transform(data.cuisine)
@@ -51,7 +52,7 @@ class DataLoader:
         self.y_train = y_train
         self.x_train = x_train
 
-    def get_data(self,full=False):
+    def get_data(self,full=False,tratio=0.33):
         if not(full):
             # limit training data: british, chinese & indian
             idx = np.logical_or(self.y_train==1, self.y_train==3)
@@ -61,9 +62,9 @@ class DataLoader:
             idx = np.logical_or(idx, self.y_train==7)
             x_train = self.x_train[idx]
             y_train = self.y_train[idx]
-            return x_train, y_train
+            return train_test_split(x_train,y_train,test_size=tratio)
         else: 
-            return self.x_train, self.y_train
+            return train_test_split(self.x_train, self.y_train, test_size=tratio)
     
     def visualize(self,algo='pca'):
         if algo=='pca':                 
