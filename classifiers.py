@@ -5,7 +5,7 @@ from DataInterface import DataInterface
 
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
+from pylab import *
 
 ## Functions 
 def plot_confusion_matrix(y_true, y_pred):
@@ -33,13 +33,13 @@ def plot_confusion_matrix(y_true, y_pred):
 
 ## Load Data
 dface  = DataInterface()
-x_train,x_valid,y_train,y_valid = dface.get_traindata()
+x_train,x_valid,y_train,y_valid = dface.get_traindata(full=True)
 x_test = dface.get_testdata()
 labels = dface.classes
 
 ## Train some classifiers
 #KNN
-knn = KNeighborsClassifier(n_neighbors=15)
+knn = KNeighborsClassifier(n_neighbors=20)
 knn.fit(x_train,y_train)
 
 y_pred= knn.predict(x_valid)
@@ -48,7 +48,7 @@ print(classification_report(y_valid,y_pred, labels=np.unique(y_valid), target_na
 print 'Total Accuracy: {0:2.4}%'.format(acc*100)
 
 
-plot_confusion_matrix(y_valid, y_pred)
+#plot_confusion_matrix(y_valid, y_pred)
 
 
 ## Create Submission file
