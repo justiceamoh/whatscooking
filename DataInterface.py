@@ -19,13 +19,13 @@ from sklearn.decomposition import PCA
 
 # from tsne import bh_sne
 
-class DataLoader:
+class DataInterface:
     """A class for loading and visualizing whatscooking data
         get_data() : get training data. 
     """
 
     def __init__(self,filename='train.json'):
-        self.filename=filename
+        self.filename_tr=filename
 
         # Read JSON data using pandas
         # columns are: id, cuisine, ingredients
@@ -48,11 +48,12 @@ class DataLoader:
         vectorizer  = TfidfVectorizer(stop_words='english', ngram_range=(1,1), max_df=0.57, analyzer='word', token_pattern=r'\w+')
         x_train     = vectorizer.fit_transform(data.ingredients_string).todense()
         ingred_dict = vectorizer.vocabulary_
+        self.vectorizer = vectorizer
 
         self.y_train = y_train
         self.x_train = x_train
 
-    def get_data(self,full=False,tratio=0.33):
+    def get_traindata(self,full=False,tratio=0.33):
         if not(full):
             # limit training data: british, chinese & indian
             idx = np.logical_or(self.y_train==1, self.y_train==3)
@@ -65,6 +66,25 @@ class DataLoader:
             return train_test_split(x_train,y_train,test_size=tratio)
         else: 
             return train_test_split(self.x_train, self.y_train, test_size=tratio)
+
+    def get_testdata(self,filename='test.json'):
+        self.filename_ts = filename
+        data = pd.read_json(filename)
+        data['ingredients_clean_string'] = [' , '.join(z).strip() for z in data['ingredients']]
+        data['ingredients_string'] = [' '.join([WordNetLemmatizer().lemmatize(re.sub('[^A-Za-z]', ' ', line)) for line in lists]).strip() for lists in data['ingredients']]
+        
+        self.tsdata = data 
+        self.x_test = self.vectorizer.transform(data.ingredients_string)
+        return self.x_train
+
+    def make_submission(self,predictions,filename='submission.csv'):
+        if self.tsdata== None:
+            print('No test data created!')
+        else:
+           self.tsdata['cuisine']=predictions
+           tsdata = self.tsdata.sort('id', ascending=True)
+           tsdata[['id', 'ingredients_clean_string', 'cuisine']].to_csv(filename) 
+
     
     def visualize(self,algo='pca'):
         if algo=='pca':                 
