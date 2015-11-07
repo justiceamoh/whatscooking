@@ -45,7 +45,7 @@ NUM_CLASSES  = len(labels)
 ##  NETWORK ARCHITECTURE  ##
 #==========================#
 layers=[
-        (InputLayer,     {'shape': (None,1,NUM_FEATURES)}),
+        (InputLayer,     {'shape': (None,NUM_FEATURES)}),
         (DenseLayer,     {'num_units': 1000, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
@@ -60,7 +60,7 @@ layers=[
     ]
 
 net = NeuralNet(
-        layers=layer1,
+        layers=layers,
         max_epochs=40,
         update=nesterov_momentum,
         update_learning_rate=0.001,
@@ -72,4 +72,4 @@ net = NeuralNet(
 #======================#
 ##  NETWORK TRAINING  ##
 #======================#
-net.fit(X_train,y_train)
+net.fit(x_train,y_train)
