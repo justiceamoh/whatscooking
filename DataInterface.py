@@ -74,8 +74,8 @@ class DataInterface:
         data['ingredients_string'] = [' '.join([WordNetLemmatizer().lemmatize(re.sub('[^A-Za-z]', ' ', line)) for line in lists]).strip() for lists in data['ingredients']]
         
         self.tsdata = data 
-        self.x_test = self.vectorizer.transform(data.ingredients_string)
-        return self.x_train
+        self.x_test = self.vectorizer.transform(data.ingredients_string).todense()
+        return self.x_test
 
     def make_submission(self,predictions,filename='submission.csv'):
         if self.tsdata== None:
