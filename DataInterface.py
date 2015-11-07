@@ -53,6 +53,8 @@ class DataInterface:
         self.y_train = y_train
         self.x_train = x_train
 
+        self.tsdata  = pd.DataFrame()
+
     def get_traindata(self,full=False,tratio=0.33):
         if not(full):
             # limit training data: british, chinese & indian
@@ -78,10 +80,10 @@ class DataInterface:
         return self.x_test
 
     def make_submission(self,predictions,filename='submission.csv'):
-        if self.tsdata== None:
+        if self.tsdata.empty:
             print('No test data created!')
         else:
-           self.tsdata['cuisine']=predictions
+           self.tsdata['cuisine']=self.lass_decode(predictions)
            tsdata = self.tsdata.sort('id', ascending=True)
            tsdata[['id', 'cuisine']].to_csv(filename) 
 
