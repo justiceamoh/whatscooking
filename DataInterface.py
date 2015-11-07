@@ -83,7 +83,7 @@ class DataInterface:
         else:
            self.tsdata['cuisine']=predictions
            tsdata = self.tsdata.sort('id', ascending=True)
-           tsdata[['id', 'ingredients_clean_string', 'cuisine']].to_csv(filename) 
+           tsdata[['id', 'cuisine']].to_csv(filename) 
 
     
     def visualize(self,algo='pca'):
