@@ -72,7 +72,7 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=100,
+        max_epochs=200,
         update=nesterov_momentum,
         update_learning_rate=0.001,
         update_momentum=0.9,
@@ -115,7 +115,7 @@ cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
 ## Fit to validation 
 print('fitting to validation data ...')
-net.fit(x_valid,y_valid,epochs=30)
+net.fit(x_valid,y_valid,epochs=50)
 with open('./cuisine_net2.pkl', 'wb') as file:
     pickle.dump(net, file, -1)
 
