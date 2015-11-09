@@ -24,7 +24,7 @@ from DataInterface import DataInterface
 from pylab import *
 
 import theano
-import cPickle as pkl
+import cPickle as pickle
 
 # from pylab import *
 import numpy as np
@@ -47,6 +47,7 @@ NUM_CLASSES  = len(labels)
 # Convert to theano types
 x_train = x_train.astype(dtype=floatX)
 x_valid = x_valid.astype(dtype=floatX)
+x_test  = x_test.astype(dtype=floatX)
 
 y_train = y_train.astype(dtype=np.int32)
 y_valid = y_valid.astype(dtype=np.int32)
@@ -71,7 +72,7 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=40,
+        max_epochs=100,
         update=nesterov_momentum,
         update_learning_rate=0.001,
         update_momentum=0.9,
@@ -82,4 +83,46 @@ net = NeuralNet(
 #======================#
 ##  NETWORK TRAINING  ##
 #======================#
+start = time()
 net.fit(x_train,y_train)
+end   = time()
+
+m, s = divmod(end-start, 60)
+h, m = divmod(m, 60)
+print 'Training runtime: {0}hrs, {0}mins, {1}s'.format(h,m,s)
+
+## Save network
+with open('./cuisine_net1.pkl', 'wb') as file:
+    pickle.dump(net, file, -1)
+
+## Load network
+# with open('cuisine_net1.pkl', 'rb') as f:
+#     net_pretrain = pickle.load(f)
+
+
+
+#================#
+##  VALIDATION  ##
+#================#
+y_pred = net.predict(y_valid)
+
+acc = accuracy_score(y_valid,y_pred)
+print 'Total Accuracy: {0:2.4}%'.format(acc*100)
+cm = confusion_matrix(y_valid, y_pred)
+cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+# print(cm_norm)
+
+
+## Fit to validation 
+print('fitting to validation data ...')
+net.fit(x_valid,y_valid,epochs=30)
+with open('./cuisine_net2.pkl', 'wb') as file:
+    pickle.dump(net, file, -1)
+
+#==========================#
+##  TESTING & SUBMISSION  ##
+#==========================#
+predictions = net.predict(x_test)
+dface.make_submission(predictions, filename='dnn_submission.csv')
+
+
