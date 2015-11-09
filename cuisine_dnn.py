@@ -89,7 +89,7 @@ end   = time()
 
 m, s = divmod(end-start, 60)
 h, m = divmod(m, 60)
-print 'Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s)
+print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
 with open('./cuisine_net1.pkl', 'wb') as file:
@@ -107,7 +107,7 @@ with open('./cuisine_net1.pkl', 'wb') as file:
 y_pred = net.predict(y_valid)
 
 acc = accuracy_score(y_valid,y_pred)
-print 'Total Accuracy: {0:2.4}%'.format(acc*100)
+print('Total Accuracy: {0:2.4}%'.format(acc*100))
 cm = confusion_matrix(y_valid, y_pred)
 cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 # print(cm_norm)
