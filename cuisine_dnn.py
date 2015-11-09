@@ -26,6 +26,10 @@ from pylab import *
 import theano
 import cPickle as pkl
 
+# from pylab import *
+import numpy as np
+import matplotlib.pyplot as plt
+
 floatX = theano.config.floatX
 
 
@@ -40,6 +44,12 @@ labels = dface.classes
 NUM_FEATURES = x_train.shape[1]
 NUM_CLASSES  = len(labels)
 
+# Convert to theano types
+x_train = x_train.astype(dtype=floatX)
+x_valid = x_valid.astype(dtype=floatX)
+
+y_train = y_train.astype(dtype=np.int32)
+y_valid = y_valid.astype(dtype=np.int32)
 
 #==========================#
 ##  NETWORK ARCHITECTURE  ##
