@@ -89,7 +89,7 @@ end   = time()
 
 m, s = divmod(end-start, 60)
 h, m = divmod(m, 60)
-print 'Training runtime: {0}hrs, {0}mins, {1}s'.format(h,m,s)
+print 'Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s)
 
 ## Save network
 with open('./cuisine_net1.pkl', 'wb') as file:
