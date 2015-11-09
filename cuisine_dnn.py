@@ -21,7 +21,7 @@ from nolearn.lasagne import objective
 
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from DataInterface import DataInterface
-from pylab import *
+from time import time
 
 import theano
 import cPickle as pickle
@@ -57,13 +57,13 @@ y_valid = y_valid.astype(dtype=np.int32)
 #==========================#
 layers=[
         (InputLayer,     {'shape': (None,NUM_FEATURES)}),
-        (DenseLayer,     {'num_units': 1000, 'nonlinearity':relu}),
+        (DenseLayer,     {'num_units':  850, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  500}),
+        (DenseLayer,     {'num_units':  256}),
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  256}),
         (DropoutLayer,   {'p':0.5}),                         
