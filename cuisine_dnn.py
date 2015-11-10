@@ -65,12 +65,7 @@ layers=[
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
-        (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  256}),
-        (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  256}),
-        (DropoutLayer,   {'p':0.5}),                         
+        (DenseLayer,     {'num_units':  256}),                     
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
