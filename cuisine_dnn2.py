@@ -123,6 +123,6 @@ print('Total Accuracy: {0:2.4}%'.format(acc*100))
 ##  TESTING & SUBMISSION  ##
 #==========================#
 predictions = net.predict(x_test)
-dface.make_submission(predictions, filename='dnn_submission2.csv')
+dface.make_submission(predictions, filename='dnn_shallow_submission.csv')
 
 
