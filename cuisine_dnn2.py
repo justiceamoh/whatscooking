@@ -65,12 +65,7 @@ layers=[
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
-        (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  256}),
-        (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  256}),
-        (DropoutLayer,   {'p':0.5}),                         
+        (DenseLayer,     {'num_units':  256}),                        
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
@@ -96,7 +91,7 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_deep_net.pkl.gz'
+netfile='./cuisine_shallow_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 
