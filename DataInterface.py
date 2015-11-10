@@ -83,7 +83,7 @@ class DataInterface:
         if self.tsdata.empty:
             print('No test data created!')
         else:
-           self.tsdata['cuisine']=self.label_decode(predictions)
+           self.tsdata['cuisine']=self.class_decode(predictions)
            tsdata = self.tsdata.sort('id', ascending=True)
            tsdata[['id', 'cuisine']].to_csv(filename) 
 

@@ -104,7 +104,7 @@ with open('./cuisine_net1.pkl', 'wb') as file:
 #================#
 ##  VALIDATION  ##
 #================#
-y_pred = net.predict(y_valid)
+y_pred = net.predict(x_valid)
 
 acc = accuracy_score(y_valid,y_pred)
 print('Total Accuracy: {0:2.4}%'.format(acc*100))
