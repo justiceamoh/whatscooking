@@ -91,7 +91,7 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_deep_net.pkl.gz'
+netfile='./cuisine_shallow_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 
@@ -123,6 +123,6 @@ print('Total Accuracy: {0:2.4}%'.format(acc*100))
 ##  TESTING & SUBMISSION  ##
 #==========================#
 predictions = net.predict(x_test)
-dface.make_submission(predictions, filename='dnn_deep_submission.csv')
+dface.make_submission(predictions, filename='dnn_shallow_submission.csv')
 
 
