@@ -19,12 +19,16 @@ from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import TrainSplit
 from nolearn.lasagne import objective
 
+from nolearn.lasagne.visualize import plot_loss
+from nolearn.lasagne.visualize import plot_conv_weights
+
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from DataInterface import DataInterface
 from time import time
 
 import theano
-import cPickle as pickle
+import gzip
+import cPickle as pkl
 
 # from pylab import *
 import numpy as np
@@ -92,8 +96,8 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-with open('./cuisine_net1.pkl', 'wb') as file:
-    pickle.dump(net, file, -1)
+with gzip.open('./cuisine_net1.pkl.gz', 'wb') as file:
+    pkl.dump(net, file, -1)
 
 ## Load network
 # with open('cuisine_net1.pkl', 'rb') as f:
@@ -116,8 +120,8 @@ cm_norm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 ## Fit to validation 
 print('fitting to validation data ...')
 net.fit(x_valid,y_valid,epochs=50)
-with open('./cuisine_net2.pkl', 'wb') as file:
-    pickle.dump(net, file, -1)
+with gzip.open('./cuisine_net2.pkl', 'wb') as file:
+    pkl.dump(net, file, -1)
 
 #==========================#
 ##  TESTING & SUBMISSION  ##
