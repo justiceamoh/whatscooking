@@ -61,11 +61,13 @@ y_valid = y_valid.astype(dtype=np.int32)
 #==========================#
 layers=[
         (InputLayer,     {'shape': (None,NUM_FEATURES)}),
-        (DenseLayer,     {'num_units':  850, 'nonlinearity':relu}),
+        (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  256}),                        
+        (DenseLayer,     {'num_units':  250, 'nonlinearity':relu}),
+        (DropoutLayer,   {'p':0.5}),
+        (DenseLayer,     {'num_units':  250}),                        
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
@@ -91,7 +93,7 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_shallow_net.pkl.gz'
+netfile='./cuisine_shallow_l4_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 
@@ -123,6 +125,6 @@ print('Total Accuracy: {0:2.4}%'.format(acc*100))
 ##  TESTING & SUBMISSION  ##
 #==========================#
 predictions = net.predict(x_test)
-dface.make_submission(predictions, filename='dnn_shallow_submission.csv')
+dface.make_submission(predictions, filename='dnn_shallow_l4_submission.csv')
 
 
