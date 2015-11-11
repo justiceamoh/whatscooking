@@ -11,7 +11,6 @@ from lasagne.layers import DropoutLayer
 
 from lasagne.nonlinearities import softmax
 from lasagne.nonlinearities import rectify as relu
-from lasagne.nonlinearities import leaky_rectify as lrelu
 from lasagne.updates import adam, nesterov_momentum
 from lasagne.layers import get_all_params
 
@@ -62,11 +61,12 @@ y_valid = y_valid.astype(dtype=np.int32)
 #==========================#
 layers=[
         (InputLayer,     {'shape': (None,NUM_FEATURES)}),
-        (DenseLayer,     {'num_units':  750, 'nonlinearity':lrelu}),
+        (DenseLayer,     {'num_units':  750, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  500, 'nonlinearity':lrelu}),
+        (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  250}),                     
+        (DenseLayer,     {'num_units':  250}),
+        (DropoutLayer,   {'p':0.5}),                     
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
@@ -92,7 +92,7 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_leaky_net.pkl.gz'
+netfile='./cuisine_drop3_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 

@@ -63,17 +63,15 @@ layers=[
         (InputLayer,     {'shape': (None,NUM_FEATURES)}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
-        (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  250, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  250}),                        
+        (DenseLayer,     {'num_units':  150}),                     
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=150,
+        max_epochs=100,
         update=nesterov_momentum,
         update_learning_rate=0.001,
         update_momentum=0.9,
@@ -93,9 +91,11 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_shallow_l4_net.pkl.gz'
+netfile='./cuisine_half_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
+
+print('Network saved as ' + netfile)
 
 ## Load network
 # with gzip.open(netfile, 'rb') as f:
@@ -125,6 +125,7 @@ print('Total Accuracy: {0:2.4}%'.format(acc*100))
 ##  TESTING & SUBMISSION  ##
 #==========================#
 predictions = net.predict(x_test)
-dface.make_submission(predictions, filename='dnn_shallow_l4_submission.csv')
+outfile=netfile[:-7] + '_submission.csv'
+dface.make_submission(predictions, filename=outfile)
 
 
