@@ -56,6 +56,11 @@ x_test  = x_test.astype(dtype=floatX)
 y_train = y_train.astype(dtype=np.int32)
 y_valid = y_valid.astype(dtype=np.int32)
 
+
+# Join training & validation sets
+x_train = np.vstack((x_train,x_valid))
+y_train = np.hstack((y_train,y_valid))
+
 #==========================#
 ##  NETWORK ARCHITECTURE  ##
 #==========================#
@@ -71,11 +76,11 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=100,
+        max_epochs=300,
         update=nesterov_momentum,
         update_learning_rate=0.001,
         update_momentum=0.9,
-        train_split=TrainSplit(eval_size=0.25),
+        train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )
 

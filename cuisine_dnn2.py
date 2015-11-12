@@ -11,7 +11,7 @@ from lasagne.layers import DropoutLayer
 
 from lasagne.nonlinearities import softmax
 from lasagne.nonlinearities import rectify as relu
-from lasagne.updates import adam, nesterov_momentum
+from lasagne.updates import rmsprop, nesterov_momentum
 from lasagne.layers import get_all_params
 
 ## Nolearn Modules
@@ -56,26 +56,31 @@ x_test  = x_test.astype(dtype=floatX)
 y_train = y_train.astype(dtype=np.int32)
 y_valid = y_valid.astype(dtype=np.int32)
 
+
+# Join training & validation sets
+x_train = np.vstack((x_train,x_valid))
+y_train = np.hstack((y_train,y_valid))
+
 #==========================#
 ##  NETWORK ARCHITECTURE  ##
 #==========================#
 layers=[
         (InputLayer,     {'shape': (None,NUM_FEATURES)}),
+        (DenseLayer,     {'num_units':  750, 'nonlinearity':relu}),
+        (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':  500, 'nonlinearity':relu}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  250, 'nonlinearity':relu}),
-        (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units':  150}),                     
+        (DenseLayer,     {'num_units':  250}),                     
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=100,
-        update=nesterov_momentum,
+        max_epochs=300,
+        update=rmsprop,
         update_learning_rate=0.001,
         update_momentum=0.9,
-        train_split=TrainSplit(eval_size=0.25),
+        train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )
 
@@ -91,15 +96,15 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_half_net.pkl.gz'
+netfile='./cuisine_net.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 
 print('Network saved as ' + netfile)
 
-## Load network
-# with gzip.open(netfile, 'rb') as f:
-#     net_pretrain = pkl.load(f)
+# Load network
+with gzip.open(netfile, 'rb') as f:
+    net_pretrain = pkl.load(f)
 
 
 
