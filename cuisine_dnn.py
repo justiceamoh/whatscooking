@@ -11,7 +11,7 @@ from lasagne.layers import DropoutLayer
 
 from lasagne.nonlinearities import softmax
 from lasagne.nonlinearities import rectify as relu
-from lasagne.updates import adam, nesterov_momentum
+from lasagne.updates import rmsprop, nesterov_momentum
 from lasagne.layers import get_all_params
 
 ## Nolearn Modules
@@ -76,10 +76,9 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=300,
-        update=nesterov_momentum,
+        max_epochs=15,
+        update=rmsprop,
         update_learning_rate=0.001,
-        update_momentum=0.9,
         train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )

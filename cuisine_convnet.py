@@ -76,10 +76,10 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=12,
+        max_epochs=15,
         update=rmsprop,
         update_learning_rate=0.001,
-        train_split=TrainSplit(eval_size=0.25),
+        train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )
 
