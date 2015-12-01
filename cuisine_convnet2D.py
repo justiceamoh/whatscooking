@@ -118,7 +118,7 @@ h, m = divmod(m, 60)
 print('Training runtime: {0}hrs, {1}mins, {2}s'.format(h,m,s))
 
 ## Save network
-netfile='./cuisine_net.pkl.gz'
+netfile='./cuisine_convnet2D.pkl.gz'
 with gzip.open(netfile, 'wb') as file:
     pkl.dump(net, file, -1)
 
