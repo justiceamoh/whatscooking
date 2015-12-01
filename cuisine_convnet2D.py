@@ -8,9 +8,8 @@ from __future__ import print_function, unicode_literals
 from lasagne.layers import InputLayer
 from lasagne.layers import DenseLayer
 from lasagne.layers import DropoutLayer
-from lasagne.layers import Conv1DLayer
-from lasagne.layers import MaxPool1DLayer
-from lasagne.layers import ReshapeLayer
+from lasagne.layers import Conv2DLayer
+from lasagne.layers import MaxPool2DLayer
 
 from lasagne.nonlinearities import softmax
 from lasagne.nonlinearities import rectify as relu
@@ -21,7 +20,6 @@ from lasagne.layers import get_all_params
 from nolearn.lasagne import NeuralNet
 from nolearn.lasagne import TrainSplit
 from nolearn.lasagne import objective
-from nolearn.lasagne import PrintLayerInfo
 
 from nolearn.lasagne.visualize import plot_loss
 from nolearn.lasagne.visualize import plot_conv_weights
@@ -66,25 +64,34 @@ x_train = np.vstack((x_train,x_valid))
 y_train = np.hstack((y_train,y_valid))
 
 
-## Add Singleton Class for Convolutions
-x_train = np.expand_dims(x_train,1)
-x_test  = np.expand_dims(x_test, 1)
+## Convert Data to 2D for Conv2D
+INPUT_WIDTH  = 78
+INPUT_HEIGHT = 38
+gap = np.zeros((x_train.shape[0],1))
+x_train = np.append(x_train,gap, axis=-1)
+x_train = x_train.reshape((x_train.shape[0], 1, INPUT_WIDTH, INPUT_HEIGHT))
+
+gap = np.zeros((x_test.shape[0],1))
+x_test = np.append(x_test,gap, axis=-1)
+x_test = x_test.reshape((x_test.shape[0], 1, INPUT_WIDTH, INPUT_HEIGHT))
+
+
 #==========================#
 ##  NETWORK ARCHITECTURE  ##
 #==========================#
 
 layers=[
-        (InputLayer,     {'shape': (None,1,NUM_FEATURES)}),
-        (DenseLayer,     {'num_units':  750, 'nonlinearity':relu}),
-        (DropoutLayer,   {'p':0.5}),
-        (ReshapeLayer,   {'shape': (-1,1,750)}),        
-        (Conv1DLayer,    {'num_filters': 12, 'filter_size':10, 'stride':3, 'nonlinearity':relu}),
-        # (MaxPool1DLayer, {'pool_size': 2}),
+        (InputLayer,     {'shape': (None,1,INPUT_WIDTH,INPUT_HEIGHT)}),
+        (Conv2DLayer,    {'num_filters': 32, 'filter_size':(13,6), 'stride':(2,1), 'nonlinearity':relu}),
+        (MaxPool2DLayer, {'pool_size': (2,2)}),
+        (Conv2DLayer,    {'num_filters': 96, 'filter_size':(3,3), 'nonlinearity':relu}),
+        (MaxPool2DLayer, {'pool_size': (2,2)}),
         # (Conv2DLayer,    {'num_filters': 64, 'filter_size':(3,3), 'nonlinearity':relu}),
         # (MaxPool2DLayer, {'pool_size': (1,1)}),        
-        (DenseLayer,     {'num_units': 250}),
+        (DenseLayer,     {'num_units': 256}),
         (DropoutLayer,   {'p':0.5}),
-        (DenseLayer,     {'num_units': 250}),
+        (DenseLayer,     {'num_units': 256}),
+        (DropoutLayer,   {'p':0.5}),
         (DenseLayer,     {'num_units':NUM_CLASSES, 'nonlinearity':softmax}),
     ]
 
@@ -92,16 +99,13 @@ layers=[
 net = NeuralNet(
         layers=layers,
         max_epochs=60,
-        update=rmsprop,
+        update=nesterov_momentum,
         update_learning_rate=0.001,
-        # update_momentum=0.9,
+        update_momentum=0.9,
         train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )
 
-net.initialize()
-layer_info = PrintLayerInfo()
-layer_info(net)
 #======================#
 ##  NETWORK TRAINING  ##
 #======================#
