@@ -43,7 +43,7 @@ floatX = theano.config.floatX
 ##  LOADING DATA  ##
 #==================#
 dface  = DataInterface()
-x_train,x_valid,y_train,y_valid = dface.get_traindata(full=False)
+x_train,x_valid,y_train,y_valid = dface.get_traindata(full=True)
 x_test = dface.get_testdata()
 labels = dface.classes
 
@@ -69,7 +69,7 @@ INPUT_WIDTH  = 78
 INPUT_HEIGHT = 38
 gap = np.zeros((x_train.shape[0],1))
 x_train = np.append(x_train,gap, axis=-1)
-x_train = x_train.reshape((x_train.shape[0], 1, INPUT_WIDTH, INPUT_HEIGHT)) 
+x_train = x_train.reshape((x_train.shape[0], 1, INPUT_WIDTH, INPUT_HEIGHT))
 
 gap = np.zeros((x_test.shape[0],1))
 x_test = np.append(x_test,gap, axis=-1)
@@ -98,7 +98,7 @@ layers=[
 
 net = NeuralNet(
         layers=layers,
-        max_epochs=40,
+        max_epochs=60,
         update=nesterov_momentum,
         update_learning_rate=0.001,
         update_momentum=0.9,
@@ -125,8 +125,8 @@ with gzip.open(netfile, 'wb') as file:
 print('Network saved as ' + netfile)
 
 # Load network
-with gzip.open(netfile, 'rb') as f:
-    net_pretrain = pkl.load(f)
+#with gzip.open(netfile, 'rb') as f:
+#    net_pretrain = pkl.load(f)
 
 
 
@@ -151,8 +151,8 @@ print('Total Accuracy: {0:2.4}%'.format(acc*100))
 #==========================#
 ##  TESTING & SUBMISSION  ##
 #==========================#
-# predictions = net.predict(x_test)
-# outfile=netfile[:-7] + '_submission.csv'
-# dface.make_submission(predictions, filename=outfile)
+predictions = net.predict(x_test)
+outfile=netfile[:-7] + '_submission.csv'
+dface.make_submission(predictions, filename=outfile)
 
 
