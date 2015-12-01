@@ -99,9 +99,9 @@ layers=[
 net = NeuralNet(
         layers=layers,
         max_epochs=60,
-        update=nesterov_momentum,
+        update=rmsprop,
         update_learning_rate=0.001,
-        update_momentum=0.9,
+        # update_momentum=0.9,
         train_split=TrainSplit(eval_size=0.3),
         verbose=1,
     )
