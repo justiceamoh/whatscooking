@@ -45,7 +45,7 @@ floatX = theano.config.floatX
 ##  LOADING DATA  ##
 #==================#
 dface  = DataInterface()
-x_train,x_valid,y_train,y_valid = dface.get_traindata(full=True)
+x_train,x_valid,y_train,y_valid = dface.get_traindata(full=False)
 x_test = dface.get_testdata()
 labels = dface.classes
 
@@ -121,8 +121,8 @@ with gzip.open(netfile, 'wb') as file:
 print('Network saved as ' + netfile)
 
 # Load network
-#with gzip.open(netfile, 'rb') as f:
-#    net_pretrain = pkl.load(f)
+with gzip.open(netfile, 'rb') as f:
+   net_pretrain = pkl.load(f)
 
 
 
